@@ -1,76 +1,15 @@
-name: PR Checks - Tests and Lint
-
-# Когда запускать этот workflow:
-# 1. При пуше в ветки master/main
-# 2. При открытии/обновлении Pull Request в master/main
+name: CI Pipeline
 on:
-  push:
-    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master", "main" ]
-
-# Права для записи результатов проверок
-permissions:
-  contents: read
-  checks: write
-  pull-requests: write
-
+    branches: [main, master]
 jobs:
-  # Задача 1: Запуск Unit-тестов
-  run-unit-tests:
-    name: Run Unit Tests
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-      # Шаг 1: Получить код из репозитория
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      # Шаг 2: Установить Python
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
-      # Шаг 3: Установить зависимости из requirements.txt
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      # Шаг 4: Запустить тесты
-      - name: Run tests with pytest
-        run: |
-          python -m pytest test_class_car.py -v --junitxml=test-results.xml
-      
-      # Шаг 5: Показать результаты тестов в интерфейсе GitHub
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: test-results.xml
-
-  # Задача 2: Проверка кода с помощью Ruff
-  run-ruff-lint:
-    name: Run Ruff Linter
-    runs-on: ubuntu-latest
-    
-    steps:
-      # Шаг 1: Получить код из репозитория
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      # Шаг 2: Установить Python
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      # Шаг 3: Установить Ruff
-      - name: Install Ruff
-        run: pip install ruff
-      
-      # Шаг 4: Запустить проверку Ruff
-      - name: Run Ruff check
-        run: |
-          ruff check src/ test_class_car.py --output-format=github
+      - run: pip install -r requirements.txt
+      - run: ruff check src/
+      - run: pytest src/test_class_car.py
