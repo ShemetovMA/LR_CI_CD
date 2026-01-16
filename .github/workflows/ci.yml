@@ -2,6 +2,8 @@ name: CI Pipeline
 on:
   pull_request:
     branches: [main, master]
+  workflow_dispatch:  # Для ручного запуска
+
 jobs:
   test:
     runs-on: ubuntu-latest
