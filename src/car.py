@@ -23,7 +23,7 @@ class Car:
         return self._fuel_in_tank
 
     def refuel_car(self, fuel_quantity: float):
-        if self._max_fuel_capacity - self._fuel_in_tank < fuel_quantity:
+        #if self._max_fuel_capacity - self._fuel_in_tank < fuel_quantity:
             raise FuelOverflowError  # ruff рекомендует без скобок
         self._fuel_in_tank += fuel_quantity
 
