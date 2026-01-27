@@ -2,7 +2,7 @@ name: CI Pipeline
 on:
   pull_request:
     branches: [main, master]
-  workflow_dispatch:  # Для ручного запуска
+  workflow_dispatch:  
 
 jobs:
   test:
@@ -13,5 +13,6 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
+      - run: pip install pytest ruff
       - run: ruff check src/
       - run: pytest src/test_class_car.py
